@@ -1,3 +1,5 @@
+#Fontes dos dados: https://github.com/wcota/covid19br
+
 #cases per states
 #download.file('https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv', './cases-brazil-states-time.csv')
 cases_brazil_states_time <- read.csv('https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv', sep = ",", header = TRUE, encoding = "UTF-8", stringsAsFactors=FALSE)
@@ -20,7 +22,7 @@ cases_brazil_cities <- read.csv('https://raw.githubusercontent.com/wcota/covid19
 
 
 #============================#
-#tabelas de apoio
+#tabelas e variáveis de apoio
 #============================#
 cases_brazil_cities_gps <- merge(cases_brazil_cities, gps_cities, by="ibgeID", all.x = TRUE) # fundir tabela pelo codigo IBGE das cidades
 cases_brazil_cities_gps <- filter(cases_brazil_cities_gps, cases_brazil_cities_gps$totalCases > 0) #filtrar cidades sem casos
@@ -29,11 +31,12 @@ cases_brazil_cities_gps_deaths <- filter(cases_brazil_cities_gps, cases_brazil_c
 atualizacao <- as.Date(max(cases_brazil_states_time$date))
 atualizacao_format <- format(atualizacao, "%d %b %Y")
 
+
 #============================#
 #funções
 #============================#
 
-#plotar mapa com casos
+#plotar mapa com casos ou mortes
 mapa <- function(tipo) {
 
           #plotar mapa com casos
@@ -47,6 +50,7 @@ mapa <- function(tipo) {
                     points(cases_brazil_cities_gps_deaths$lon, cases_brazil_cities_gps_deaths$lat, col = "red", pch = 21, bg = "red",  cex = 0.1)
           }
 }
+
 
 # Dataframe
 DT_cases_brazil_states <- data.frame(
@@ -65,6 +69,7 @@ DT_cases_brazil_states <- data.frame(
 # mapa leaflet
 mapa_interativo <- function(N) {
           
+          #remover as localizações em coordenadas
           cases_brazil_cities_gps <- filter(cases_brazil_cities_gps, cases_brazil_cities_gps$lat != 'is.na') 
           
           #data frame de apoio
@@ -88,7 +93,7 @@ mapa_interativo <- function(N) {
                     "escala_by" = c(1, 1)
           )
           
-          #  switch do que mostrar // 1 = log10 casos, 2 = log10 mortes
+          #  switch: // 1 = log10 casos, 2 = log10 mortes
           if (N == 1) {
                     covid_dados$factor <- log10(covid_dados$cases)
                     tamanho <- ((covid_dados$factor^2)*1.2)+2
@@ -102,6 +107,7 @@ mapa_interativo <- function(N) {
           palette <- colorBin(palette=c("#00FF00","#FF0000"), domain=NULL, na.color="transparent",
                                 bins=seq(leaflet_menu$escala_i[N], leaflet_menu$escala_f[N], leaflet_menu$escala_by[N]))
           
+          #mural com info
           label_mapa <- paste(
                     "<h3>", covid_dados$city, "</h3>",
                     "<b>CASOS: </b>", covid_dados$cases, "<br/>",
@@ -111,9 +117,11 @@ mapa_interativo <- function(N) {
                     "<b>FATALIDADE</b><br>", round(covid_dados$death_ratio*100, 2), "%<br/>",
                     covid_dados$factor,
                     sep = ""
-          ) %>%
-                    lapply(htmltools::HTML)
+          )
           
+          lapply(label_mapa, htmltools::HTML)
+          
+          #plotar o mapa
           m <- leaflet()
           m <- addTiles(m)
           m <- addProviderTiles(m, providers$OpenStreetMap.Mapnik)
@@ -128,58 +136,3 @@ mapa_interativo <- function(N) {
           m <- addLegend(m, pal=palette, values=covid_dados$factor, opacity=1, title = leaflet_menu$legenda[N], position = "bottomright" )
           m
 }
-
-
-
-
-
-
-
-# mapa_interativo(2)
-# data_atualizacao <- file.info('./cases-brazil-states.csv') #$ctime
-#map_brazil <- read_state(code_state="all", year=2018) #mapa do brasil / movido para app.R // pesado
-
-
-
-# #plotar cidades com óbitos
-# library(dplyr)
-# cases_brazil_cities <- read.csv('./csv/cases-brazil-cities.csv', sep = ",", header = TRUE, encoding = "UTF-8", stringsAsFactors=FALSE)
-# gps_cities <- read.csv('./csv/gps_cities.csv', sep = ",", header = TRUE, encoding = "UTF-8", stringsAsFactors=FALSE)
-# cases_brazil_cities_gps <- merge(cases_brazil_cities, gps_cities, by="ibgeID", all.x = TRUE) # fundir tabela pelo codigo IBGE das cidades
-# cases_brazil_cities_gps_deaths <- filter(cases_brazil_cities_gps, cases_brazil_cities_gps$deaths > 0) #filtrar cidades sem casos
-# #map_brazil <- read_state(code_state="all", year=2018)
-# plot(map_brazil$geom)
-# points(cases_brazil_cities_gps_deaths$lon, cases_brazil_cities_gps_deaths$lat, col = "red", pch = 21, bg = "red",  cex = 0.1)
-# paste("Municípios com óbitos por COVID-19:", nrow(cases_brazil_cities_gps_deaths))
-# paste("Número de municípios:", nrow(gps_cities))
-
-
-
-
-# 
-# 
-# 
-# paste("Municípios com casos de COVID-19:", nrow(cases_brazil_cities_gps))
-# paste("Número de municípios:", nrow(gps_cities))
-# nrow(cases_brazil_cities_gps)/nrow(gps_cities)*100
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# #plotar mapa com capitais
-# library(geobr)
-# cases_brazil_states <- read.csv('./csv/cases-brazil-states.csv', sep = ",", header = TRUE, encoding = "UTF-8", stringsAsFactors=FALSE)
-# brazil_capitals <- read.csv('./csv/_gps_capitals.csv', sep = ";", header = TRUE, encoding = "UTF-8", stringsAsFactors=FALSE)
-# cases_brazil_states_gps <- merge(cases_brazil_states, brazil_capitals, by="state", all = TRUE)
-# map_brazil <- read_state(code_state="all", year=2018)
-# plot(map_brazil$geom)
-# #casos por 100k
-# points(brazil_capitals$lon, brazil_capitals$lat, col = "red", pch = 21, bg = "red",  cex = (cases_brazil_states_gps$totalCases_per_100k_inhabitants)/50)
-# 
-# 
-# 
-# 

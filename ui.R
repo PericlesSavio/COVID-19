@@ -1,10 +1,23 @@
+#packages
+library("shiny")
+library("shinydashboard")
+library("dplyr") #manipular dataframes
+library("maps") #funcao mapa()
+library("mapdata") #funcao mapa()
+library("leaflet") #mapa interativo
 
+#sources
+source("covid.R")
+
+
+#ui = header + sider + body
 
 header = dashboardHeader(
           title = "Covid-19 Dashboard",
           titleWidth = '300px'
-
 )
+
+
 
 sidebar = dashboardSidebar(
           width = '300px',
@@ -16,6 +29,8 @@ sidebar = dashboardSidebar(
                     infoBox("Atualização", h3(atualizacao_format), icon = icon("clock"), fill = TRUE, width = 12)
           )
 )
+
+
 
 body = dashboardBody(
           tabItems(
@@ -65,11 +80,12 @@ body = dashboardBody(
                                 radioButtons("mapa_interativo_radiobtn", label = NULL, 
                                              c("log10 CASOS" = "casos_log",
                                                "log10 MORTES" = "mortes_log")
-                                             )
+                                )
                             )
                     )
           )
 )
+
 
 
 ui = dashboardPage(header, sidebar, body)
