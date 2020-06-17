@@ -1,0 +1,37 @@
+.main-header .logo {
+  font-family: "Georgia", Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 24px;
+  background-color: #990000;
+}
+
+/* logo */
+.skin-blue .main-header .logo {
+        background-color: #000000;
+}
+
+.skin-blue .main-header .logo:hover {
+        background-color: #000000;
+}
+
+.skin-blue .main-header .navbar {
+        background-color: #000000;
+}
+
+.box.box-solid.box-primary>.box-header {
+  color:#fff;
+  background:#333333
+                    }
+
+.box.box-solid.box-primary{
+border-bottom-color:#333333;
+border-left-color:#333333;
+border-right-color:#333333;
+border-top-color:#333333;
+}
+
+#casos_barras {
+  background-color:#990000;
+  color:#FFFFFF
+}
+
