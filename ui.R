@@ -207,7 +207,23 @@ body = dashboardBody(
                                             leafletOutput("brazil_covid_deaths", height = 600)
                                         )
                                 )
+                       ),
+                       
+                       tabPanel("Sobre",
+                                fluidRow(
+                                        box(title = "Sobre o dashboard", width = 12, height = "auto", status="primary", solidHeader = TRUE,
+                                            p("Meu nome é Péricles, sou um estudante de Data Science e criei meu este projeto para treinar minhas habilidades em R (linguagem de programação voltada à manipulação, análise e visualização de dados) e Shiny (pacote R que facilita a criação de aplicativos web interativos)."),
+                                            hr(),
+                                            h4("Contato:"),
+                                            helpText(a("pericles.marques@outlook.com", href="mailto:pericles.marques@outlook.com?Subject=S%E9rie%20B")),
+                                            helpText(a("linkedin.com/in/periclessavio/", target="_blank", href="https://www.linkedin.com/in/periclessavio/")),
+                                            helpText(a("twitter.com/Pericles_SGM", target="_blank", href="https://twitter.com/Pericles_SGM"))
+                                            
+                                        )
+                                )
                        )
+                       
+                       
                 )
         )
 )
