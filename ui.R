@@ -60,20 +60,20 @@ body = dashboardBody(
                                             DT::dataTableOutput("world_covid_df")
                                         ),
                                         
+                                        # box(width = 6, height = "700", status="primary", solidHeader = TRUE,
+                                        #     title = "Casos notificados por data de notificação (depois do 30º caso diário)",
+                                        #     plot_curves_top10_countries(1)
+                                        # ),
+                                        # box(width = 6, height = "700", status="primary", solidHeader = TRUE,
+                                        #     title = "Óbitos notificados por data de notificação (depois do 5º óbito diário)",
+                                        #     plot_curves_top10_countries(2)
+                                        # ),
                                         box(width = 6, height = "700", status="primary", solidHeader = TRUE,
-                                            title = "Casos notificados por data de notificação (depois do 30º caso diário)",
-                                            plot_curves_top10_countries(1)
-                                        ),
-                                        box(width = 6, height = "700", status="primary", solidHeader = TRUE,
-                                            title = "Óbitos notificados por data de notificação (depois do 5º óbito diário)",
-                                            plot_curves_top10_countries(2)
-                                        ),
-                                        box(width = 6, height = "700", status="primary", solidHeader = TRUE,
-                                            title = "Casos acumuladoso por dia (depois do 100º caso)",
+                                            title = "Casos acumuladoso por dia",
                                             plot_curves_top10_countries(3)
                                         ),
                                         box(width = 6, height = "700", status="primary", solidHeader = TRUE,
-                                            title = "Óbitos acumulados por dia (depois do 5º óbito)",
+                                            title = "Óbitos acumulados por dia",
                                             plot_curves_top10_countries(4)
                                         ),
                                         box(title = "Casos (Total)", width = 6, status="primary", solidHeader = TRUE, 
@@ -107,30 +107,14 @@ body = dashboardBody(
                        tabPanel("Brasil",
                                 fluidRow(
                                         box(width = 6, height = "480", status="primary", solidHeader = TRUE,
-                                            title = "Casos notificados por data de notificação",
+                                            title = "Casos notificados por data de notificação (Brasil)",
                                             plot_vbar_newcases_newdeaths_brazil(1)
                                         ),
                                         
                                         box(width = 6, height = "480", status="primary", solidHeader = TRUE,
-                                            title = "Óbitos notificados por data de notificação",
+                                            title = "Óbitos notificados por data de notificação (Brasil)",
                                             plot_vbar_newcases_newdeaths_brazil(2)
                                         ),
-                                        
-                                        box(width = 6, height = "480", status="primary", solidHeader = TRUE,
-                                            title = "Casos notificados por semana epidemiológica",
-                                            plot_vbar_newcases_newdeaths_brazil(3)
-                                        ),
-                                        
-                                        box(width = 6, height = "480", status="primary", solidHeader = TRUE,
-                                            title = "Óbitos notificados por semana epidemiológica",
-                                            plot_vbar_newcases_newdeaths_brazil(4)
-                                        ),
-                                        
-                                )
-                       ),
-                       
-                       tabPanel("Estados",
-                                fluidRow(
                                         box(title = "Dados por Estado", 
                                             width = 12,
                                             height = "auto",

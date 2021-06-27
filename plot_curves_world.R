@@ -1,117 +1,194 @@
-# # World COVID19 CSV
-# world_covid <- read.csv('https://covid.ourworldindata.org/data/owid-covid-data.csv',
-#                         sep = ",", header = TRUE, encoding = "UTF-8", stringsAsFactors=FALSE)[,1:16]
-# 
-# # Aggregated dataframe
-# world_covid_sum <- function() {
-#         # Source: world_covid
-#         last_date <- as.Date(max(world_covid$date))
-#         
-#         # Removing "World"
-#         world_covid2 <- filter(world_covid, world_covid$date == last_date)
-#         world_covid2 <- filter(world_covid2, world_covid2$location != "World")
-#         
-#         # Fixind Spain's bug
-#         last_date1 <- as.Date(max(world_covid$date))-1
-#         world_covid_spain <- filter(world_covid, world_covid$location == "Spain")
-#         world_covid_spain <- filter(world_covid_spain, world_covid_spain$date == last_date1)
-#         
-#         # Merging the two tables
-#         world_covid_data <- rbind(world_covid2, world_covid_spain)
-#         world_covid_data <- arrange(world_covid_data, desc(total_cases))
-#         world_covid_data
-# }
+
+
+# df_newcases = read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/jhu/new_cases.csv')
+# df_newdeaths = read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/jhu/new_deaths.csv')
+df_totalcases = read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/jhu/total_cases.csv')
+df_totaldeaths = read.csv('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/jhu/total_deaths.csv')
 
 plot_curves_top10_countries <- function(N) {
-        # Excluding Brazil / Selecting the top9 countries in cases
-        country <- unique(filter(df_world_countries(), df_world_countries()$location != "Brazil")$location, incomparables = FALSE)[1:9]
-        pandemic_date <- NA
-        selected_countries <- filter(world_covid, world_covid$location %in% country)
+        # # Excluding Brazil / Selecting the top9 countries in cases
+        # country <- unique(filter(df_world_countries(), df_world_countries()$location != "Brazil")$location, incomparables = FALSE)[1:9]
+        # pandemic_date <- NA
+        # selected_countries <- filter(world_covid, world_covid$location %in% country)
         
         # Switch
         switch(N,
                {
-                       selected_countries$serie <- selected_countries$new_cases ; serie_N <- 30 ; text_ <- "casos" ;
-                       title_ <- 'Casos diários por COVID-19' ; dia_ <- "Dias a partir do 1º dia com 30 ou mais casos" ;
-                       brazil <- filter(world_covid, world_covid$location == "Brazil" & world_covid$date >= "2020-03-16") ;
-                       brazil$serie <- brazil$new_cases
+                       text_ <- "casos" ;
+                       title_ <- 'Casos diários por COVID-19' ; dia_ <- "Data";
+                       x_ = df_newcases$date; y_ = df_newcases$Brazil;
+                       df = df_newcases
                },
                {
-                       selected_countries$serie <- selected_countries$new_deaths ; serie_N <- 5 ; text_ <- "óbitos" ;
-                       title_ <- 'Óbitos diários por COVID-19' ; dia_ <- "Dias a partir do 1º dia com 5 ou mais óbitos" ;
-                       brazil <- filter(world_covid, world_covid$location == "Brazil" & world_covid$date >= "2020-03-21") ;
-                       brazil$serie <- brazil$new_deaths
+                       text_ <- "óbitos" ;
+                       title_ <- 'Óbitos diários por COVID-19' ; dia_ <- "Data";
+                       x_ = df_newdeaths$date; y_ = df_newdeaths$Brazil;
+                       df = df_newdeaths
+                       
                },
                {
-                       selected_countries$serie <- selected_countries$total_cases ; serie_N <- 100 ; text_ <- "casos" ;
-                       title_ <- 'Casos diários por COVID-19' ; dia_ <- "Dias a partir do 100º caso confirmado" ;
-                       brazil <- filter(world_covid, world_covid$location == "Brazil" & world_covid$date >= "2020-03-15") ;
-                       brazil$serie <- brazil$total_cases
+                       text_ <- "casos" ;
+                       title_ <- 'Casos diários por COVID-19' ; dia_ <- "Data";
+                       x_ = df_totalcases$date; y_ = df_totalcases$Brazil;
+                       df = df_totalcases
                },
                {
-                       selected_countries$serie <- selected_countries$total_deaths ; serie_N <- 5 ; text_ <- "óbitos" ;
-                       title_ <- 'Óbitos diários por COVID-19' ; dia_ <- "Dias a partir do 5º óbito confirmado" ;
-                       brazil <- filter(world_covid, world_covid$location == "Brazil" & world_covid$date >= "2020-03-21") ;
-                       brazil$serie <- brazil$total_deaths
+                       text_ <- "óbitos" ;
+                       title_ <- 'Óbitos diários por COVID-19' ; dia_ <- "Data";
+                       x_ = df_totaldeaths$date; y_ = df_totaldeaths$Brazil;
+                       df = df_totaldeaths
                }
         )
         
         # Generating a list/dataframe with first day since confirmed cases first reached 30 per day
-        for (i in 1:9) {
-                pandemic_date[i] <- filter(selected_countries,
-                                           selected_countries$location == country[i] & selected_countries$serie > serie_N)[1,4]
-        }
-        country_list <- cbind(country, pandemic_date)
-        country_list <- as.data.frame(country_list)
-        country_list$pandemic_date <- as.Date(country_list$pandemic_date)
+        # for (i in 1:9) {
+        #         pandemic_date[i] <- filter(selected_countries,
+        #                                    selected_countries$location == country[i] & selected_countries$serie > serie_N)[1,4]
+        # }
+        # country_list <- cbind(country, pandemic_date)
+        # country_list <- as.data.frame(country_list)
+        # country_list$pandemic_date <- as.Date(country_list$pandemic_date)
+        # 
+        # # Generating a dataframe with necessary data to plot
+        # world_data_plot <- as.data.frame(matrix(nrow = 0, ncol = 0))
+        # for (i in 1:9) {
+        #         world_data_plot <- rbind(world_data_plot, filter(selected_countries,
+        #                         selected_countries$location == country_list[i,1] & selected_countries$date >= country_list[i,2]))
+        # }
+        # 
+        # # Removing negative and zero value
+        # world_data_plot <- filter(world_data_plot, world_data_plot$serie >0)
         
-        # Generating a dataframe with necessary data to plot
-        world_data_plot <- as.data.frame(matrix(nrow = 0, ncol = 0))
-        for (i in 1:9) {
-                world_data_plot <- rbind(world_data_plot, filter(selected_countries,
-                                selected_countries$location == country_list[i,1] & selected_countries$date >= country_list[i,2]))
-        }
-
-        # Removing negative and zero value
-        world_data_plot <- filter(world_data_plot, world_data_plot$serie >0)
+        
         
         # Plot
-        fig <- plot_ly(x = 1:nrow(brazil), y = brazil$serie, name = "Brazil", type = 'scatter', mode = 'lines', height=620,
-                       text = format(brazil$serie, decimal.mark = ",", big.mark="."),
+        fig <- plot_ly(x = x_, y = y_, name = "Brazil", type = 'scatter', mode = 'lines', height=620,
+                       text = format(y_, decimal.mark = ",", big.mark="."),
                        hovertemplate = paste("<b>Brazil</b><br>%{text} casos<br>em ",
-                                             format(as.Date(brazil$date[1:nrow(brazil)]), "%d-%b-%Y"),
+                                             format(as.Date(max(x_)), "%d-%b-%Y"),
                                              "<extra></extra>", sep = ""))
-        # 1# is visible / 2:9 is legend only
-        for (i in 1:1) {
-                n = length(filter(world_data_plot, world_data_plot$location == country[i])$serie)
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$Argentina,
+                                 name = 'Argentina',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Argentina',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$Peru,
+                                 name = 'Peru',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Peru',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$'United States',
+                                 name = 'Estados Unidos',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Estados Unidos',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$'United Kingdom',
+                                 name = 'Reino Unido',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Reino Unido',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$India,
+                                 name = 'India',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'India',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+
                 
-                fig <- fig %>% add_trace(x = 1:n,
-                                         y = filter(world_data_plot, world_data_plot$location == country[i])$serie,
-                                         name = country[i],
-                                         mode = 'lines',
-                                         visible = TRUE,
-                                         text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
-                                                       decimal.mark = ",", big.mark="."),
-                                         hovertemplate = paste("<b>",country[i],"</b><br>%{text} ",text_,"<br>em ",
-                                                               format(as.Date(filter(world_data_plot,
-                                                                   world_data_plot$location == country[i])$date[1:n]), "%d-%b-%Y"),
-                                                               "<extra></extra>", sep = "")
-                )
-        }
-        for (i in 2:9) {
-                n = length(filter(world_data_plot, world_data_plot$location == country[i])$serie)
-                
-                fig <- fig %>% add_trace(x = 1:n,
-                                         y = filter(world_data_plot, world_data_plot$location == country[i])$serie,
-                                         name = country[i],
-                                         mode = 'lines',
-                                         visible = "legendonly",
-                                         text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie, decimal.mark = ",", big.mark="."),
-                                         hovertemplate = paste("<b>",country[i],"</b><br>%{text} ",text_,"<br>em ",
-                                                               format(as.Date(filter(world_data_plot, world_data_plot$location == country[i])$date[1:n]), "%d-%b-%Y"),
-                                                               "<extra></extra>", sep = "")
-                )
-        }
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$Russia,
+                                 name = 'Russia',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Russia',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$Mexico,
+                                 name = 'México',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Mexico',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$Italy,
+                                 name = 'Itália',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Itália',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$France,
+                                 name = 'França',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'França',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
+        fig <- fig %>% add_trace(x = x_,
+                                 y = df$Colômbia,
+                                 name = 'Colômbia',
+                                 mode = 'lines',
+                                 visible = TRUE,
+                                 #text = format(filter(world_data_plot, world_data_plot$location == country[i])$serie,
+                                 #              decimal.mark = ",", big.mark="."),
+                                 hovertemplate = paste("<b>",'Colômbia',"</b><br>%{y} ",text_,"<br>em ",
+                                                       format(as.Date(max(x_)), "%d-%b-%Y"),
+                                                       "<extra></extra>", sep = "")
+        )
+        
         fig <- fig %>% layout(xaxis = list(title = dia_),
                               yaxis = list(title = title_, type = "log"),
                               #legend = list(y = 0.9),

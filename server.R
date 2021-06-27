@@ -3,7 +3,7 @@ library(shiny)
 shinyServer(function(input, output) {
         
         output$world_covid_df <- DT::renderDataTable({
-                df_world_countries()[,c(3,5:16)]
+                world_covid_data[,c(3,5,6,8,9,11,14,17,27,28,33,35,36,37)]
         }, options = list(pageLength = 7, lengthMenu = c(7,14,21,28)), class = "display nowrap compact", filter = "top", rownames= FALSE)
         
         # Brazil

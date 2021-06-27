@@ -1,8 +1,10 @@
+dia_hj = as.Date(max(world_covid_data$last_updated_date))
+
 world_map <- function(N) {
         
-        world_covid_data <- df_world_countries()
-        world_covid_data$date <- as.Date(world_covid_data$date)
-        last_date <- as.Date(max(world_covid$date))
+        # world_covid_data <- df_world_countries()
+        # world_covid_data$date <- as.Date(world_covid_data$date)
+        last_date <- as.Date(max(world_covid_data$last_updated_date))
         
         switch (N, #1 = total_cases / 2 = total_deaths / 3 = new_cases / 4 = new_deaths
                 {#1
@@ -11,7 +13,7 @@ world_map <- function(N) {
                         data = world_covid_data$total_cases;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Casos:<br>", format(world_covid_data$total_cases, decimal.mark = ",", big.mark="."), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#2
@@ -20,7 +22,7 @@ world_map <- function(N) {
                         data = world_covid_data$total_deaths;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Óbitos:<br>", format(world_covid_data$total_deaths, decimal.mark = ",", big.mark="."), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#3
@@ -29,7 +31,7 @@ world_map <- function(N) {
                         data = world_covid_data$new_cases;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Casos no último dia:<br>", format(world_covid_data$new_cases, decimal.mark = ",", big.mark="."), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#4
@@ -38,7 +40,7 @@ world_map <- function(N) {
                         data = world_covid_data$new_deaths;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Óbitos no último dia:<br>", format(world_covid_data$new_deaths, decimal.mark = ",", big.mark="."), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#5
@@ -47,7 +49,7 @@ world_map <- function(N) {
                         data = world_covid_data$total_cases_per_million;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Casos por milhão:<br>", format(round(world_covid_data$total_cases_per_million, digits = 2), decimal.mark = ",", big.mark=".", digits = 5, nsmall = 2), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#6
@@ -56,7 +58,7 @@ world_map <- function(N) {
                         data = world_covid_data$total_deaths_per_million;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Óbitos por milhão:<br>", format((world_covid_data$total_deaths_per_million), decimal.mark = ",", big.mark=".", digits = 0, nsmall = 2), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#7
@@ -65,7 +67,7 @@ world_map <- function(N) {
                         data = world_covid_data$new_cases_per_million;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Novos casos por milhão:<br>", format((data), decimal.mark = ",", big.mark=".", digits = 0, nsmall = 2), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 },
                 {#8
@@ -74,7 +76,7 @@ world_map <- function(N) {
                         data = world_covid_data$new_deaths_per_million;
                         hover_info = paste("<b>",world_covid_data$location,"</b><br><br>",
                                            "Novos óbitos por milhão:<br>", format((data), decimal.mark = ",", big.mark=".", digits = 0, nsmall = 2), "<br>",
-                                           "(", format(world_covid_data$date, "%d de %B de %Y"), ")", sep = ""
+                                           "(", format(dia_hj, "%d de %B de %Y"), ")", sep = ""
                         )
                 }
         )
@@ -87,4 +89,4 @@ world_map <- function(N) {
         fig
         
 }
-world_map(5)
+#world_map(5)
